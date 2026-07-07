@@ -15,11 +15,12 @@
     "@azure/cosmos": "^4.9.3",
     "@azure/functions": "^4.0.0",
     "@azure/storage-blob": "^12.33.0",
+    "crypto": "^1.0.1",
     "durable-functions": "^3.4.0"
   },
   "devDependencies": {
     "@types/jest": "^30.0.0",
-    "@types/node": "18.x",
+    "@types/node": "^18.19.130",
     "jest": "^30.4.2",
     "rimraf": "^5.0.0",
     "ts-jest": "^29.4.11",
