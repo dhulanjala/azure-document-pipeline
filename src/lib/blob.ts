@@ -39,7 +39,7 @@ export async function getUploadSasUrl(
       blobName,
       permissions: BlobSASPermissions.parse("cw"),
       startsOn: new Date(now.valueOf() - 5 * 60 * 1000), // 5 min in past: clock skew
-      expiresOn: new Date(now.valueOf() + 15 * 60 * 1000), // 15 min
+      expiresOn: new Date(now.valueOf() + 60 * 60 * 1000), // 15 min
       contentType,
     },
     sharedKeyCredential,

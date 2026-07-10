@@ -21,10 +21,11 @@ df.app.orchestration("documentOrchestrator", function* (ctx) {
       retryPolicy,
       input,
     );
+    console.log("sssssssssssssssssssssssssssssss", checksum);
     yield ctx.df.callActivityWithRetry("indexDocument", retryPolicy, {
       ...input,
-      ...checksum,
-      ...metadata,
+      checksum,
+      metadata,
     });
     yield ctx.df.callActivity("setStatus", {
       id: input.documentId,
