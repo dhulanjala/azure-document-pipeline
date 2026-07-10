@@ -22,11 +22,12 @@ function parseCredential(conn: string): StorageSharedKeyCredential {
 }
 const sharedKeyCredential = parseCredential(connectionString);
 
+//creat SAS URL
 export async function getUploadSasUrl(
   blobName: string,
   contentType: string,
 ): Promise<string> {
-  // local/dev convenience — Bicep owns this in production (see guide, Step 4)
+  
   if (process.env.NODE_ENV !== "production") {
     await containerClient.createIfNotExists();
   }
@@ -45,4 +46,9 @@ export async function getUploadSasUrl(
   ).toString();
 
   return `${containerClient.getBlockBlobClient(blobName).url}?${sasToken}`;
+}
+
+// get blob client
+export async function getBlobClient(blobName: string) {
+  return containerClient.getBlobClient(blobName);
 }
