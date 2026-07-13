@@ -2,6 +2,9 @@ import { app, InvocationContext } from "@azure/functions";
 import { OrchestrationInput } from "../lib/types";
 import * as df from "durable-functions";
 
+const POLL_INTERVAL_MS = 1000;
+const MAX_WAIT_MS = 60_000;
+
 export async function retryFailedDocument(
   queueItem: unknown,
   ctx: InvocationContext,
@@ -23,6 +26,35 @@ export async function retryFailedDocument(
   const instanceId = await client.startNew("documentOrchestrator", {
     input: { ...input, isRetry: true },
   });
+
+  // Block until the retry orchestration reaches a terminal state.
+  // Without this, startNew's ~30ms resolution makes this function
+  // "succeed" regardless of whether the retried work actually failed —
+  // which is exactly the bug that caused every prior test to show
+  // Duration=33ms and immediate "Succeeded" no matter what.
+  const start = Date.now();
+  while (Date.now() - start < MAX_WAIT_MS) {
+    const status = await client.getStatus(instanceId);
+
+    if (status?.runtimeStatus === "Completed") {
+      ctx.log(`Retry succeeded for document ${input.documentId}`);
+      return;
+    }
+    if (
+      status?.runtimeStatus === "Failed" ||
+      status?.runtimeStatus === "Terminated"
+    ) {
+      throw new Error(
+        `Retry orchestration ${instanceId} ended as ${status.runtimeStatus} for document ${input.documentId}`,
+      );
+    }
+
+    await new Promise((resolve) => setTimeout(resolve, POLL_INTERVAL_MS));
+  }
+
+  throw new Error(
+    `Timed out waiting for retry orchestration ${instanceId} (document ${input.documentId})`,
+  );
 }
 
 app.storageQueue("retryFailedDocument", {
