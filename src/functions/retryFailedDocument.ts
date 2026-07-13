@@ -28,10 +28,8 @@ export async function retryFailedDocument(
   });
 
   // Block until the retry orchestration reaches a terminal state.
-  // Without this, startNew's ~30ms resolution makes this function
-  // "succeed" regardless of whether the retried work actually failed —
-  // which is exactly the bug that caused every prior test to show
-  // Duration=33ms and immediate "Succeeded" no matter what.
+  // cause without this it immediatel return instance id and background it still running the orchestration
+  // and queue think its successfull and delete the queue message and but under the hood in orchestration will throw an error and we will miss it.
   const start = Date.now();
   while (Date.now() - start < MAX_WAIT_MS) {
     const status = await client.getStatus(instanceId);
@@ -40,6 +38,7 @@ export async function retryFailedDocument(
       ctx.log(`Retry succeeded for document ${input.documentId}`);
       return;
     }
+    //Azure does not delete the queue message.
     if (
       status?.runtimeStatus === "Failed" ||
       status?.runtimeStatus === "Terminated"
