@@ -12,7 +12,7 @@ df.app.orchestration("documentOrchestrator", function* (ctx) {
   });
   try {
     const metadata = yield ctx.df.callActivityWithRetry(
-      "extractMetaData",
+      "extractMetadata",
       retryPolicy,
       input,
     );
