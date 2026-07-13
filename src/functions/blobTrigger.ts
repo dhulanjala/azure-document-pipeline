@@ -8,7 +8,7 @@ export async function onBlobUpload(blob: Buffer, ctx: InvocationContext) {
     input: {
       documentId,
       blobName,
-      container: "documents",
+      container: process.env.CONTAINER,
     },
   });
   ctx.log(`Started orchestration ${instanceId} for document ${documentId}`);

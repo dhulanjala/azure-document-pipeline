@@ -16,7 +16,7 @@ df.app.activity("generateChecksum", {
     for await (const chunk of stream) {
       hash.update(chunk as Buffer);
     }
-    console.log("-===================jjjjjjjjj",hash);
+
     return hash.digest("hex");
   },
 });

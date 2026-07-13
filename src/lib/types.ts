@@ -16,4 +16,13 @@ export interface OrchestrationInput {
   documentId: string;
   blobName: string;
   container: string;
+  isRetry?: boolean;
+}
+
+export interface FailureAuditEvent {
+  id: string;
+  documentId: string;
+  blobName: string;
+  error: string;
+  occuredAt: string;
 }

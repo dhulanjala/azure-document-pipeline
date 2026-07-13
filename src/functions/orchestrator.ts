@@ -21,7 +21,7 @@ df.app.orchestration("documentOrchestrator", function* (ctx) {
       retryPolicy,
       input,
     );
-    console.log("sssssssssssssssssssssssssssssss", checksum);
+
     yield ctx.df.callActivityWithRetry("indexDocument", retryPolicy, {
       ...input,
       checksum,
@@ -32,13 +32,15 @@ df.app.orchestration("documentOrchestrator", function* (ctx) {
       status: "indexed",
     });
   } catch (error) {
-    yield ctx.df.callActivity("deadLetter", {
-      input,
-      error: String(error),
-    });
     yield ctx.df.callActivity("setStatus", {
       id: input.documentId,
       status: "failed",
     });
+
+    if (!input.isRetry) {
+      yield ctx.df.callActivity("deadLetter", { input, error: String(error) });
+    }
+
+    throw error;
   }
 });

@@ -38,7 +38,6 @@ df.app.activity("setStatus", {
         : {}),
     };
 
-    console.log("=============resource",record)
     await container.items.upsert(record);
   },
 });

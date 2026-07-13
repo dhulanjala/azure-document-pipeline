@@ -9,7 +9,7 @@ type IndexInput = OrchestrationInput & {
 df.app.activity("indexDocument", {
   handler: async (input: IndexInput) => {
     const container = await getDocumentsContainer();
-    console.log("oooooooooooooooooooooooooooooooo", input);
+
     const record: DocumentRecord = {
       id: input.documentId,
       fileName: input.blobName.split("/").slice(1).join("/"),
