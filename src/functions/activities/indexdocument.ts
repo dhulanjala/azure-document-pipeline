@@ -3,7 +3,7 @@ import { DocumentRecord, OrchestrationInput } from "../../lib/types";
 import { getDocumentsContainer } from "../../lib/cosmos";
 
 type IndexInput = OrchestrationInput & {
-  metadata: Record<string, any>;
+  metadata: { contentType: string; sizeBytes: number };
   checksum: string;
 };
 df.app.activity("indexDocument", {
