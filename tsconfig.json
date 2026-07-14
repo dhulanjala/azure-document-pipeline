@@ -7,6 +7,6 @@
     "sourceMap": true,
     "strict": false,
     "esModuleInterop": true,
-    "types": ["node", "@azure/functions"]
+    "types": ["node", "@azure/functions","jest"]
   }
 }

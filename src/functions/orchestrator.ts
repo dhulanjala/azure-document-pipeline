@@ -1,14 +1,14 @@
 import * as df from "durable-functions";
 import { OrchestrationInput } from "../lib/types";
 
-df.app.orchestration("documentOrchestrator", function* (ctx) {
+export function* documentOrchestratorFn(ctx) {
   const input = ctx.df.getInput() as OrchestrationInput;
   const retryPolicy = new df.RetryOptions(5000, 3); // 5s and 3 times
   retryPolicy.backoffCoefficient = 2;
 
   yield ctx.df.callActivity("setStatus", {
     id: input.documentId,
-    staus: "processing",
+    status: "processing",
   });
   try {
     const metadata = yield ctx.df.callActivityWithRetry(
@@ -43,4 +43,6 @@ df.app.orchestration("documentOrchestrator", function* (ctx) {
 
     throw error;
   }
-});
+}
+
+df.app.orchestration("documentOrchestrator", documentOrchestratorFn);
