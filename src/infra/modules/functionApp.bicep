@@ -30,6 +30,9 @@ resource appInsights 'Microsoft.Insights/components@2020-02-02' = {
   }
 }
 
+
+
+
 resource hostingPlan 'Microsoft.Web/serverfarms@2023-12-01' = {
   name: '${namePrefix}-plan'
   location: location

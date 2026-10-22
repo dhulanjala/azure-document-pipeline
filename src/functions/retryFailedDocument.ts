@@ -2,8 +2,8 @@ import { app, InvocationContext } from "@azure/functions";
 import { OrchestrationInput } from "../lib/types";
 import * as df from "durable-functions";
 
-const POLL_INTERVAL_MS = 1000;
-const MAX_WAIT_MS = 60_000;
+const POLL_INTERVAL_MS = 1000; // check every 1 second
+const MAX_WAIT_MS = 60_000;// give up after 60 seconds total
 
 export async function retryFailedDocument(
   queueItem: unknown,
